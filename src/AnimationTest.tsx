@@ -1,5 +1,5 @@
 import React, { FC, useRef, useState } from "react";
-import { Text, SafeAreaView, TouchableOpacity, Animated } from "react-native";
+import { Text, TouchableOpacity, Animated, View } from "react-native";
 import tw, { useDeviceContext } from "twrnc";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
@@ -66,9 +66,7 @@ const AnimationTest = () => {
   // console.log("Component State:", y);
 
   return (
-    <SafeAreaView
-      style={tw`dark:bg-gray-800 flex-1 justify-center items-center`}
-    >
+    <View style={tw`dark:bg-gray-800 flex-1 justify-center items-center`}>
       <Box
         onPress={moveUp}
         position={position}
@@ -76,7 +74,7 @@ const AnimationTest = () => {
         rotation={rotation}
         borderRadius={borderRadius}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

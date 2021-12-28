@@ -1,11 +1,11 @@
 import React, { FC, useRef } from "react";
 import {
   Text,
-  SafeAreaView,
   Animated,
   PanResponder,
   PanResponderGestureState,
   PanResponderInstance,
+  View,
 } from "react-native";
 import tw, { useDeviceContext } from "twrnc";
 
@@ -69,15 +69,13 @@ const DragTest = () => {
     })
   ).current;
   return (
-    <SafeAreaView
-      style={tw`dark:bg-gray-800 flex-1 justify-center items-center`}
-    >
+    <View style={tw`dark:bg-gray-800 flex-1 justify-center items-center`}>
       <Box
         position={position}
         borderRadius={borderRadius}
         panResponder={panResponder}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
