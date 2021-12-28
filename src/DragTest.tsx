@@ -40,18 +40,31 @@ const DragTest = () => {
     PanResponder.create({
       // 사용자가 view와 interect할 수 있도록 감지를 허용
       onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        // setOffset은 처음 위치를 결정함.
+        position.setOffset({
+          // position은 x,y 및 함수가 함께 있기 때문에 _value 속성으로 값을 불러온다.
+          // @ts-ignore
+          x: position.x._value,
+          // @ts-ignore
+          y: position.y._value,
+        });
+      },
       onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
         const { dx, dy } = gestureState;
         position.setValue({ x: dx, y: dy });
       },
       onPanResponderRelease: (_, gestureState: PanResponderGestureState) => {
-        Animated.spring(position, {
-          toValue: {
-            x: 0,
-            y: 0,
-          },
-          useNativeDriver: true,
-        }).start();
+        // setOffset 이후 offSet을 초기화하여, 다음 터치 시 이전값이 추가로 더해지지 않도록 한다.
+        // 이렇게 하지 않으면 Offset값에 새로운 Offset이 이중으로 더해진다.
+        position.flattenOffset();
+        // Animated.spring(position, {
+        //   toValue: {
+        //     x: 0,
+        //     y: 0,
+        //   },
+        //   useNativeDriver: true,
+        // }).start();
       },
     })
   ).current;
