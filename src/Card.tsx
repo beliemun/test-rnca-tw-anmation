@@ -1,4 +1,4 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import tw from "twrnc";
 import { Ionicons } from "@expo/vector-icons";
+import icons from "./icons";
 
 const Card = () => {
+  const [index, setIndex] = useState(0);
   const scale = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(0)).current;
   const rotateZ = translateX.interpolate({
@@ -36,12 +38,19 @@ const Card = () => {
     toValue: 0,
     useNativeDriver: true,
   });
-  const disappear = (dx: number) =>
+  const dismiss = (dx: number) =>
     Animated.spring(translateX, {
       toValue: dx * 3,
       useNativeDriver: true,
-    }).start();
-
+      // 애니메이션이 정해진 임계치에 다다르면 끝난 것으로 간주
+      restSpeedThreshold: 100,
+      restDisplacementThreshold: 100,
+    }).start(onDismiss);
+  const onDismiss = () => {
+    setIndex((prev) => prev + 1);
+    translateX.setValue(0);
+    scale.setValue(1);
+  };
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -51,9 +60,9 @@ const Card = () => {
       },
       onPanResponderRelease: (_, { dx }) => {
         if (dx < -150) {
-          disappear(dx);
+          dismiss(dx);
         } else if (dx > 150) {
-          disappear(dx);
+          dismiss(dx);
         } else {
           Animated.parallel([onPressUp, goBack]).start();
         }
@@ -81,6 +90,7 @@ const Card = () => {
   return (
     <SafeAreaView style={tw`bg-blue-500 flex-1 justify-center items-center`}>
       <View style={tw`bg-red-500 flex-1 justify-center items-center`}>
+        {/* second card */}
         <CardItem
           transform={[
             { scale: secondScale },
@@ -88,18 +98,27 @@ const Card = () => {
             { rotateZ: "0deg" },
           ]}
         >
-          <Ionicons name={"beer"} style={tw`text-blue-800 text-8xl`} />
+          <Ionicons
+            // @ts-ignore
+            name={icons[index + 1]}
+            style={tw`text-blue-800 text-8xl`}
+          />
         </CardItem>
+        {/* front card */}
         <CardItem transform={[{ scale }, { translateX }, { rotateZ }]}>
-          <Ionicons name={"pizza"} style={tw`text-blue-800 text-8xl`} />
+          <Ionicons
+            // @ts-ignore
+            name={icons[index]}
+            style={tw`text-blue-800 text-8xl`}
+          />
         </CardItem>
       </View>
       <View style={tw`flex-row mt-10`}>
-        <TouchableOpacity onPress={() => disappear(-150)}>
+        <TouchableOpacity onPress={() => dismiss(-150)}>
           <Ionicons name="close-circle" color={"white"} size={40} />
         </TouchableOpacity>
         <View style={tw`m-2`} />
-        <TouchableOpacity onPress={() => disappear(150)}>
+        <TouchableOpacity onPress={() => dismiss(150)}>
           <Ionicons name="checkmark-circle" color={"white"} size={40} />
         </TouchableOpacity>
       </View>
