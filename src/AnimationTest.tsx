@@ -64,7 +64,6 @@ const AnimationTest = () => {
   position.addListener(() => console.log(position.getTranslateTransform()));
   // y.addListener(() => console.log("Animated State:", y));
   // console.log("Component State:", y);
-
   return (
     <View style={tw`dark:bg-gray-800 flex-1 justify-center items-center`}>
       <Box
