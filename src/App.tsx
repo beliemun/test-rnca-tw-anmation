@@ -1,12 +1,12 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import Card from "./Card";
+import DragAndDrop from "./DragAndDrop";
 
 const App = () => {
   return (
     <>
       <StatusBar style="auto" />
-      <Card />
+      <DragAndDrop />
     </>
   );
 };
